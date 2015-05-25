@@ -17,3 +17,15 @@ class Peer:
 
     def __str__(self):
         return self.username + '\\' + self.ip + '\\' + str(self.files)
+
+
+class PeerList:
+    class __PeerList:
+        def __init__(self):
+            pass
+
+    instance = None
+
+    def __init__(self):
+        if not PeerList.instance:
+            PeerList.instance = PeerList.__PeerList()
