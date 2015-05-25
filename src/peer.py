@@ -8,6 +8,8 @@
 # =======================================
 __author__ = 'Parham Alvani'
 
+import threading
+
 
 class Peer:
     def __init__(self, username: str, ip: str, files: list):
@@ -22,10 +24,36 @@ class Peer:
 class PeerList:
     class __PeerList:
         def __init__(self):
-            pass
+            self.peers = []
 
     instance = None
+    lock = threading.Semaphore()
 
     def __init__(self):
         if not PeerList.instance:
             PeerList.instance = PeerList.__PeerList()
+            self.index = 0
+        else:
+            self.index = 0
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        PeerList.lock.acquire()
+        if self.index < len(PeerList.instance.peers):
+            peer = PeerList.instance.peers[self.index]
+            self.index += 1
+            PeerList.lock.release()
+            return peer
+        else:
+            PeerList.lock.release()
+            raise StopIteration
+
+    @staticmethod
+    def add(peer):
+        if not isinstance(peer, Peer):
+            raise TypeError()
+        PeerList.lock.acquire()
+        PeerList.instance.peers.append(peer)
+        PeerList.lock.release()

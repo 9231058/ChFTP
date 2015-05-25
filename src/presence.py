@@ -11,8 +11,10 @@ __author__ = 'Parham Alvani'
 import threading
 import socket
 import logging
+import time
 
 from peer import Peer
+from peer import PeerList
 
 
 class PresenceService(threading.Thread):
@@ -29,8 +31,8 @@ class PresenceService(threading.Thread):
         logger = logging.getLogger("PresenceService")
 
         # Broadcasting hi message
-        hello_message = "hi" + '\\' + self.username + '\\' + str(self.files)
-        self.sck.sendto(bytes(hello_message, "ascii"), ("255.255.255.255", 8182))
+        hi_message = "hi" + '\\' + self.username + '\\' + str(self.files)
+        self.sck.sendto(bytes(hi_message, "ascii"), ("255.255.255.255", 8182))
 
         # Handle ingoing presence messages
         while (True):
@@ -45,13 +47,21 @@ class PresenceService(threading.Thread):
             logger.info(" -> files: %s" % str(foreign_files))
 
             if verb == 'hi':
-                # Do hi stuff here
-                pass
+                # hi messages handling
+                peer = Peer(username, address[0], foreign_files)
+                PeerList().add(peer)
+                if username != self.username:
+                    hiback_message = "hiback" + '\\' + self.username + '\\' + str(self.files)
+                    self.sck.sendto(bytes(hiback_message, "ascii"), address)
             if verb == 'hiback':
                 # hi back messages handling
                 peer = Peer(username, address[0], foreign_files)
+                PeerList().add(peer)
 
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
     PresenceService(["a.txt"], "1995parham").start()
+    time.sleep(1)
+    for peer in PeerList():
+        print(peer)
