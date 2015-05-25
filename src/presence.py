@@ -10,25 +10,48 @@ __author__ = 'Parham Alvani'
 
 import threading
 import socket
+import logging
+
+from peer import Peer
 
 
 class PresenceService(threading.Thread):
-    def __init__(self, files: list):
+    def __init__(self, files: list, username: str):
         self.sck = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
         self.sck.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         self.sck.bind(('', 8182))
         self.files = files
+        self.username = username
         super(PresenceService, self).__init__(name="PresenceService")
 
     def run(self):
-        hello_message = "hi" + '\\' + "username" + '\\' + socket.gethostname() + '\\' + str(self.files)
+        # Create logger object
+        logger = logging.getLogger("PresenceService")
+
+        # Broadcasting hi message
+        hello_message = "hi" + '\\' + self.username + '\\' + str(self.files)
         self.sck.sendto(bytes(hello_message, "ascii"), ("255.255.255.255", 8182))
+
+        # Handle ingoing presence messages
         while (True):
             data, address = self.sck.recvfrom(1024)
             message = data.decode("ascii")
-            print(message)
-            print(address)
+            verb, username, foreign_files = message.split('\\')
+            foreign_files = eval(foreign_files)
+
+            logger.info(" Message from %s:%d:" % (address[0], address[1]))
+            logger.info(" -> verb: %s" % verb)
+            logger.info(" -> username: %s" % username)
+            logger.info(" -> files: %s" % str(foreign_files))
+
+            if verb == 'hi':
+                # Do hi stuff here
+                pass
+            if verb == 'hiback':
+                # hi back messages handling
+                peer = Peer(username, address[0], foreign_files)
 
 
 if __name__ == '__main__':
-    PresenceService(["a.txt"]).start()
+    logging.basicConfig(level=logging.INFO)
+    PresenceService(["a.txt"], "1995parham").start()
