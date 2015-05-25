@@ -13,12 +13,22 @@ import socket
 
 
 class PresenceService(threading.Thread):
-    def __init__(self, group, target, name, files, *arg, **kwargs):
+    def __init__(self, files: list):
         self.sck = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
         self.sck.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+        self.sck.bind(('', 8182))
         self.files = files
-        super(PresenceService, self).__init__(group, target, name, *arg, **kwargs)
+        super(PresenceService, self).__init__(name="PresenceService")
 
     def run(self):
-        hello_message = "hi" + '\\' + "username" + '\\' + socket.gethostname() + self.files
+        hello_message = "hi" + '\\' + "username" + '\\' + socket.gethostname() + '\\' + str(self.files)
         self.sck.sendto(bytes(hello_message, "ascii"), ("255.255.255.255", 8182))
+        while (True):
+            data, address = self.sck.recvfrom(1024)
+            message = data.decode("ascii")
+            print(message)
+            print(address)
+
+
+if __name__ == '__main__':
+    PresenceService(["a.txt"]).start()
