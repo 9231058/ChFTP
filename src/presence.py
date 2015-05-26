@@ -24,11 +24,11 @@ class PresenceService(threading.Thread):
         self.sck.bind(('', 8182))
         self.files = files
         self.username = username
-        super(PresenceService, self).__init__(name="PresenceService")
+        super(PresenceService, self).__init__(name="Presence Service")
 
     def run(self):
         # Create logger object
-        logger = logging.getLogger("PresenceService")
+        logger = logging.getLogger("Presence Service")
 
         # Broadcasting hi message
         hi_message = "hi" + '\\' + self.username + '\\' + str(self.files)
@@ -68,7 +68,7 @@ class PresenceService(threading.Thread):
         bye_message = "bye" + '\\' + self.username + '\\' + str(self.files)
         self.sck.sendto(bytes(bye_message, "ascii"), ("255.255.255.255", 8182))
 
-
+# Just for test :-)
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
     PresenceService(["a.txt"], "1995parham").start()
