@@ -49,7 +49,7 @@ class ChFTP(cmd.Cmd):
         file = args[1]
         for peer in PeerList():
             if peer.username == username and peer.files.count(file) > 0:
-                ip = peer
+                ip = peer.ip
                 break
         else:
             print("*** invalid username, file pair")

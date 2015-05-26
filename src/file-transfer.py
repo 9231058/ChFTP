@@ -12,6 +12,8 @@ import threading
 import socket
 import logging
 
+from storage import FileStorage
+
 
 class FileTransferServer(threading.Thread):
     def __init__(self):
@@ -45,8 +47,23 @@ class FileTransferHandler(threading.Thread):
         logger.info(" Request from %s: " % str(self.sck.getpeername()))
         logger.info(" -> verb: %s" % verb)
         logger.info(" -> option: %s" % option)
+        if verb == 'RETR':
+            sck_file.write("150 File status okay; about to open data connection.\n")
+            tsck = socket.socket()
+            try:
+                tsck.connect((self.sck.getpeername()[0], 20))
+            except ConnectionError:
+                sck_file.write("425 Can't open data connection.\n")
+                return
+            finally:
+                self.sck.close()
+            tsck.makefile(mode="wr", encoding="ascii", newline='\n').writelines(FileStorage().get_file(option))
+        else:
+            sck_file.write("202 Command not implemented, superfluous at this site.\n")
+            self.sck.close()
 
 # Just for test :-)
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
+    FileStorage(["."])
     FileTransferServer().start()
