@@ -15,6 +15,8 @@ import logging
 from presence import PresenceService
 from peer import PeerList
 from storage import FileStorage
+from file_transfer import FileTransferServer
+from file_transfer import recv_file
 
 
 class ChFTP(cmd.Cmd):
@@ -23,6 +25,7 @@ class ChFTP(cmd.Cmd):
         self.folders = []
         self.username = ""
         self.presenceService = None
+        self.fileTransferServer = None
 
     def do_login(self, args: str):
         self.username = args
@@ -35,6 +38,9 @@ class ChFTP(cmd.Cmd):
         self.presenceService = PresenceService(FileStorage(self.folders).get_files_name(), self.username)
         self.presenceService.start()
         print("Presence service started....")
+        self.fileTransferServer = FileTransferServer()
+        self.fileTransferServer.start()
+        print("File transfer server started....")
 
     def do_list(self, args: str):
         for peer in PeerList():
@@ -42,17 +48,20 @@ class ChFTP(cmd.Cmd):
 
     def do_get(self, args: str):
         args = args.split(" ")
-        if len(args) != 2:
+        if len(args) != 3:
             print("*** invalid number of arguments")
             return
         username = args[0]
-        file = args[1]
+        rfile = args[1]
+        lfile = args[2]
         for peer in PeerList():
-            if peer.username == username and peer.files.count(file) > 0:
+            if peer.username == username and peer.files.count(rfile) > 0:
                 ip = peer.ip
                 break
         else:
             print("*** invalid username, file pair")
+            return
+        recv_file(ip, rfile, lfile)
 
     def do_quit(self, args: str):
         self.presenceService.shutdown()
