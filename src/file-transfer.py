@@ -10,7 +10,6 @@ __author__ = 'Parham Alvani'
 
 import threading
 import socket
-import io
 import logging
 
 
@@ -25,9 +24,11 @@ class FileTransferServer(threading.Thread):
         # Create logger object
         logger = logging.getLogger("File Transfer Server")
 
+        # Handle ingoing FTP messages
         while True:
-            client = self.sck.accept()
-            FileTransferHandler(client)
+            client, address = self.sck.accept()
+            logger.info(" New connection accepted from %s:%d" % (address[0], address[1]))
+            FileTransferHandler(client).start()
 
 
 class FileTransferHandler(threading.Thread):
@@ -38,3 +39,14 @@ class FileTransferHandler(threading.Thread):
     def run(self):
         # Create logger object
         logger = logging.getLogger("File Transfer Handler")
+
+        sck_file = self.sck.makefile(mode="wr", encoding="ascii", newline='\n')
+        verb, option = sck_file.readline().split(" ")
+        logger.info(" Request from %s: " % str(self.sck.getpeername()))
+        logger.info(" -> verb: %s" % verb)
+        logger.info(" -> option: %s" % option)
+
+# Just for test :-)
+if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO)
+    FileTransferServer().start()
