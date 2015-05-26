@@ -41,3 +41,4 @@ class FileStorage:
 # Just for test :-)
 if __name__ == '__main__':
     print(FileStorage(["."]).get_files_name())
+    print(FileStorage().get_file(".gitignore"))

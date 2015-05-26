@@ -44,28 +44,55 @@ class FileTransferHandler(threading.Thread):
 
         sck_file = self.sck.makefile(mode="wr", encoding="ascii", newline='\n')
         verb, option = sck_file.readline().split(" ")
+        option = option.strip()
         logger.info(" Request from %s: " % str(self.sck.getpeername()))
         logger.info(" -> verb: %s" % verb)
         logger.info(" -> option: %s" % option)
         if verb == 'RETR':
             sck_file.write("150 File status okay; about to open data connection.\n")
+            sck_file.flush()
             tsck = socket.socket()
             try:
                 tsck.connect((self.sck.getpeername()[0], 20))
             except ConnectionError:
                 sck_file.write("425 Can't open data connection.\n")
+                sck_file.flush()
                 self.sck.close()
                 return
             tsck.makefile(mode="wr", encoding="ascii", newline='\n').writelines(FileStorage().get_file(option))
             sck_file.write("226 Closing data connection. Requested file action successful.\n")
+            sck_file.flush()
             tsck.close()
             self.sck.close()
         else:
             sck_file.write("202 Command not implemented, superfluous at this site.\n")
+            sck_file.flush()
             self.sck.close()
+
+
+def recv_file(ip: str, remote_name: str, local_name: str):
+    file = open(local_name, "w")
+
+    sck = socket.socket()
+
+    tsck = socket.socket()
+    tsck.bind(("", 20))
+    tsck.listen(5)
+
+    sck.connect((ip, 21))
+    sck_file = sck.makefile(mode="wr", encoding="ascii", newline='\n')
+    sck_file.write("RETR %s\n" % remote_name)
+    sck_file.flush()
+
+    fsck, address = tsck.accept()
+    fsck_file = fsck.makefile(mode="wr", encoding="ascii")
+    while True:
+        file.write(fsck_file.readline())
+        file.flush()
 
 # Just for test :-)
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
-    FileStorage(["."])
+    print(FileStorage(["."]).get_files_name())
     FileTransferServer().start()
+    recv_file("127.0.0.1", ".gitignore", "sample.txt")
