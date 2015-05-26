@@ -12,23 +12,32 @@ import os
 
 
 class FileStorage:
-    def __init__(self, folders: list):
-        self.folders = folders
+    class __FileStorage:
+        def __init__(self, folders: list):
+            self.folders = folders
 
-    def getFilesPath(self) -> list:
-        pass
+    instance = None
 
-    def getFilesName(self) -> list:
+    def __init__(self, folders: list=None):
+        if not FileStorage.instance:
+            FileStorage.instance = FileStorage.__FileStorage(folders)
+
+    @staticmethod
+    def get_files_name() -> list:
         retval = []
-        for folder in self.folders:
+        for folder in FileStorage.instance.folders:
             for file in os.listdir(folder):
                 if os.path.isfile(file):
                     retval.append(os.path.basename(file))
         return retval
 
-    def getFile(self, mame: str) -> str:
-        pass
+    @staticmethod
+    def get_file(name: str) -> list:
+        for folder in FileStorage.instance.folders:
+            for file in os.listdir(folder):
+                if os.path.isfile(file) and os.path.basename(file) == name:
+                    return open(file, "r").readlines()
 
 # Just for test :-)
 if __name__ == '__main__':
-    print(FileStorage(["."]).getFilesName())
+    print(FileStorage(["."]).get_files_name())
