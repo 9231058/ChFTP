@@ -14,6 +14,7 @@ import logging
 
 from presence import PresenceService
 from peer import PeerList
+from storage import FileStorage
 
 
 class ChFTP(cmd.Cmd):
@@ -31,7 +32,7 @@ class ChFTP(cmd.Cmd):
         self.folders += args.split(" ")
 
     def do_run(self, args: str):
-        self.presenceService = PresenceService(self.folders, self.username)
+        self.presenceService = PresenceService(FileStorage(self.folders).get_files_name(), self.username)
         self.presenceService.start()
         print("Presence service started....")
 
