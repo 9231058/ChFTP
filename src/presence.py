@@ -32,7 +32,7 @@ class PresenceService(threading.Thread):
 
         # Broadcasting hi message
         hi_message = "hi" + '\\' + self.username + '\\' + str(self.files)
-        self.sck.sendto(bytes(hi_message, "ascii"), ("255.255.255.255", 8182))
+        self.sck.sendto(bytes(hi_message, "ascii"), ("192.168.56.255", 8182))
 
         # Handle ingoing presence messages
         while True:
@@ -66,7 +66,7 @@ class PresenceService(threading.Thread):
     def shutdown(self):
         # Broadcasting bye message
         bye_message = "bye" + '\\' + self.username + '\\' + str(self.files)
-        self.sck.sendto(bytes(bye_message, "ascii"), ("255.255.255.255", 8182))
+        self.sck.sendto(bytes(bye_message, "ascii"), ("192.168.56.255", 8182))
 
 # Just for test :-)
 if __name__ == '__main__':

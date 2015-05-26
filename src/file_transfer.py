@@ -20,7 +20,7 @@ class FileTransferServer(threading.Thread):
         self.sck = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sck.bind(("", 21))
         self.sck.listen(5)
-        super(FileTransferServer, self).__init__(name="File Transfer Server")
+        super(FileTransferServer, self).__init__(name="File Transfer Server", daemon=True)
 
     def run(self):
         # Create logger object
@@ -36,7 +36,7 @@ class FileTransferServer(threading.Thread):
 class FileTransferHandler(threading.Thread):
     def __init__(self, sck: socket.socket):
         self.sck = sck
-        super(FileTransferHandler, self).__init__(name="File Transfer Handler")
+        super(FileTransferHandler, self).__init__(name="File Transfer Handler", daemon=True)
 
     def run(self):
         # Create logger object
@@ -85,9 +85,11 @@ def recv_file(ip: str, remote_name: str, local_name: str):
     sck_file.flush()
 
     fsck, address = tsck.accept()
-    fsck_file = fsck.makefile(mode="wr", encoding="ascii")
     while True:
-        file.write(fsck_file.readline())
+        data = fsck.recv(1024)
+        if not data:
+            break
+        file.write(data.decode('ascii'))
         file.flush()
 
 # Just for test :-)
