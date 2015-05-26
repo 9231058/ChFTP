@@ -35,6 +35,20 @@ class ChFTP(cmd.Cmd):
         for peer in PeerList():
             print(peer)
 
+    def do_get(self, args: str):
+        args = args.split(" ")
+        if len(args) != 2:
+            print("*** invalid number of arguments")
+            return
+        username = args[0]
+        file = args[1]
+        for peer in PeerList():
+            if peer.username == username and peer.files.count(file) > 0:
+                ip = peer
+                break
+        else:
+            print("*** invalid username, file pair")
+
     def do_quit(self, args: str):
         sys.exit(0)
 
