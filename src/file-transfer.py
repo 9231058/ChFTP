@@ -54,10 +54,12 @@ class FileTransferHandler(threading.Thread):
                 tsck.connect((self.sck.getpeername()[0], 20))
             except ConnectionError:
                 sck_file.write("425 Can't open data connection.\n")
-                return
-            finally:
                 self.sck.close()
+                return
             tsck.makefile(mode="wr", encoding="ascii", newline='\n').writelines(FileStorage().get_file(option))
+            sck_file.write("226 Closing data connection. Requested file action successful.\n")
+            tsck.close()
+            self.sck.close()
         else:
             sck_file.write("202 Command not implemented, superfluous at this site.\n")
             self.sck.close()
