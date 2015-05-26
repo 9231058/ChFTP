@@ -64,7 +64,8 @@ class ChFTP(cmd.Cmd):
         recv_file(ip, rfile, lfile)
 
     def do_quit(self, args: str):
-        self.presenceService.shutdown()
+        if self.presenceService:
+            self.presenceService.shutdown()
         sys.exit(0)
 
 
