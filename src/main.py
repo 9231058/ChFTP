@@ -19,7 +19,7 @@ from peer import PeerList
 class ChFTP(cmd.Cmd):
     def __init__(self):
         super(ChFTP, self).__init__()
-        self.files = []
+        self.folders = []
         self.username = ""
         self.presenceService = None
 
@@ -28,10 +28,10 @@ class ChFTP(cmd.Cmd):
         print("Welcome %s" % self.username)
 
     def do_add(self, args: str):
-        self.files += args.split(" ")
+        self.folders += args.split(" ")
 
     def do_run(self, args: str):
-        self.presenceService = PresenceService(self.files, self.username)
+        self.presenceService = PresenceService(self.folders, self.username)
         self.presenceService.start()
         print("Presence service started....")
 
