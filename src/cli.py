@@ -31,6 +31,10 @@ class ChFTP(cmd.Cmd):
         self.username = args
         print("Welcome %s" % self.username)
 
+    def help_login(self):
+        print("login username")
+        print("save your username in application")
+
     def do_add(self, args: str):
         self.folders += args.split(" ")
 
@@ -41,6 +45,11 @@ class ChFTP(cmd.Cmd):
         self.fileTransferServer = FileTransferServer()
         self.fileTransferServer.start()
         print("File transfer server started....")
+
+    def help_run(self):
+        print("run")
+        print("run presence and file transfer services")
+        print("please note that after this you cannot change your username or add new folders")
 
     def do_list(self, args: str):
         for peer in PeerList():
@@ -72,6 +81,7 @@ class ChFTP(cmd.Cmd):
 logging.basicConfig(filename='ChFTP.log', level=logging.INFO)
 cli = ChFTP()
 cli.prompt = "ChFTP> "
+cli.intro = "Welcome to ChFTP shell from chapna company.\n"
 try:
     cli.cmdloop()
 except KeyboardInterrupt:
