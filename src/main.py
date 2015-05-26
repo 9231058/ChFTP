@@ -17,18 +17,22 @@ from peer import PeerList
 
 
 class ChFTP(cmd.Cmd):
-    username = ""
-    files = []
+    def __init__(self):
+        super(ChFTP, self).__init__()
+        self.files = []
+        self.username = ""
+        self.presenceService = None
 
     def do_login(self, args: str):
-        ChFTP.username = args
-        print("Welcome %s" % ChFTP.username)
+        self.username = args
+        print("Welcome %s" % self.username)
 
     def do_add(self, args: str):
-        ChFTP.files.append(args.split(' '))
+        self.files += args.split(" ")
 
     def do_run(self, args: str):
-        PresenceService(ChFTP.files, ChFTP.username).start()
+        self.presenceService = PresenceService(self.files, self.username)
+        self.presenceService.start()
         print("Presence service started....")
 
     def do_list(self, args: str):
@@ -50,6 +54,7 @@ class ChFTP(cmd.Cmd):
             print("*** invalid username, file pair")
 
     def do_quit(self, args: str):
+        self.presenceService.shutdown()
         sys.exit(0)
 
 

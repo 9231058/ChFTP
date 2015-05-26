@@ -35,7 +35,7 @@ class PresenceService(threading.Thread):
         self.sck.sendto(bytes(hi_message, "ascii"), ("255.255.255.255", 8182))
 
         # Handle ingoing presence messages
-        while (True):
+        while True:
             data, address = self.sck.recvfrom(1024)
             message = data.decode("ascii")
             verb, username, foreign_files = message.split('\\')
@@ -57,6 +57,16 @@ class PresenceService(threading.Thread):
                 # hi back messages handling
                 peer = Peer(username, address[0], foreign_files)
                 PeerList().add(peer)
+            if verb == 'bye':
+                peer = Peer(username, address[0], foreign_files)
+                PeerList().remove(peer)
+                if username == self.username:
+                    return
+
+    def shutdown(self):
+        # Broadcasting bye message
+        bye_message = "bye" + '\\' + self.username + '\\' + str(self.files)
+        self.sck.sendto(bytes(bye_message, "ascii"), ("255.255.255.255", 8182))
 
 
 if __name__ == '__main__':

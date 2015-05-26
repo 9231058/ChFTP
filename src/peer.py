@@ -20,6 +20,12 @@ class Peer:
     def __str__(self):
         return self.username + '\\' + self.ip + '\\' + str(self.files)
 
+    def __eq__(self, other):
+        if not isinstance(other, Peer):
+            return False
+        if self.username == other.username and self.ip == other.ip:
+            return True
+
 
 class PeerList:
     class __PeerList:
@@ -56,4 +62,12 @@ class PeerList:
             raise TypeError()
         PeerList.lock.acquire()
         PeerList.instance.peers.append(peer)
+        PeerList.lock.release()
+
+    @staticmethod
+    def remove(peer):
+        if not isinstance(peer, Peer):
+            raise TypeError()
+        PeerList.lock.acquire()
+        PeerList.instance.peers.remove(peer)
         PeerList.lock.release()
