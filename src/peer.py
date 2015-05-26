@@ -56,6 +56,9 @@ class PeerList:
             PeerList.lock.release()
             raise StopIteration
 
+    def __len__(self):
+        return len(PeerList.instance.peers)
+
     @staticmethod
     def add(peer):
         if not isinstance(peer, Peer):
