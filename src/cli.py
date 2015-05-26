@@ -72,4 +72,7 @@ class ChFTP(cmd.Cmd):
 logging.basicConfig(filename='ChFTP.log', level=logging.INFO)
 cli = ChFTP()
 cli.prompt = "ChFTP> "
-cli.cmdloop()
+try:
+    cli.cmdloop()
+except KeyboardInterrupt:
+    cli.do_quit("")
