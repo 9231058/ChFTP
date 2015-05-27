@@ -18,6 +18,11 @@ from storage import FileStorage
 from file_transfer import FileTransferServer
 from file_transfer import recv_file
 
+try:
+    import termcolor
+except ImportError:
+    termcolor = None
+
 
 class ChFTP(cmd.Cmd):
     def __init__(self):
@@ -32,11 +37,21 @@ class ChFTP(cmd.Cmd):
         print("Welcome %s" % self.username)
 
     def help_login(self):
-        print("login username")
-        print("save your username in application")
+        if termcolor:
+            print(termcolor.colored("login {username}", color='green', attrs=['bold']))
+        else:
+            print("login {username}")
+        print("Save your username in application")
 
     def do_add(self, args: str):
         self.folders += args.split(" ")
+
+    def help_add(self):
+        if termcolor:
+            print(termcolor.colored("add {folders}", color='green', attrs=['bold']))
+        else:
+            print("add {folders}")
+        print("Add these folder into remote storage")
 
     def do_run(self, args: str):
         self.presenceService = PresenceService(FileStorage(self.folders).get_files_name(), self.username)
@@ -47,13 +62,23 @@ class ChFTP(cmd.Cmd):
         print("File transfer server started....")
 
     def help_run(self):
-        print("run")
-        print("run presence and file transfer services")
+        if termcolor:
+            print(termcolor.colored("run", color='green', attrs=['bold']))
+        else:
+            print("run")
+        print("Run presence and file transfer services,")
         print("please note that after this you cannot change your username or add new folders")
 
     def do_list(self, args: str):
         for peer in PeerList():
             print(peer)
+
+    def help_list(self):
+        if termcolor:
+            print(termcolor.colored("list", color='green', attrs=['bold']))
+        else:
+            print("list")
+        print("List known peer with their ip, username and files")
 
     def do_get(self, args: str):
         args = args.split(" ")
@@ -72,15 +97,29 @@ class ChFTP(cmd.Cmd):
             return
         recv_file(ip, rfile, lfile)
 
+    def help_get(self):
+        if termcolor:
+            print(termcolor.colored("get {username} {remote filename} {local filename}", color='green', attrs=['bold']))
+        else:
+            print("get {username} {remote filename} {local filename}")
+        print("Get file with remote filename from username and,")
+        print("store it in current directory with local filename")
+
     def do_quit(self, args: str):
         if self.presenceService:
             self.presenceService.shutdown()
         sys.exit(0)
 
+    def help_quit(self):
+        pass
+
 
 logging.basicConfig(filename='ChFTP.log', level=logging.INFO)
 cli = ChFTP()
-cli.prompt = "ChFTP> "
+if termcolor:
+    cli.prompt = termcolor.colored("ChFTP> ", color='red')
+else:
+    cli.prompt = "ChFTP> "
 cli.intro = "Welcome to ChFTP shell from chapna company.\n"
 try:
     cli.cmdloop()
