@@ -111,7 +111,11 @@ class ChFTP(cmd.Cmd):
         sys.exit(0)
 
     def help_quit(self):
-        pass
+        if termcolor:
+            print(termcolor.colored("quit", color='green', attrs=['bold']))
+        else:
+            print("quit")
+        print("Exit from ChFTP")
 
 
 logging.basicConfig(filename='ChFTP.log', level=logging.INFO)
