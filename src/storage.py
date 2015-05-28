@@ -11,6 +11,7 @@ __author__ = 'Parham Alvani'
 import os
 
 
+# Singleton FileStorage class
 class FileStorage:
     class __FileStorage:
         def __init__(self, folders: list):

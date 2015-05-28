@@ -27,6 +27,7 @@ class Peer:
             return True
 
 
+# Singleton PeerList class
 class PeerList:
     class __PeerList:
         def __init__(self):
