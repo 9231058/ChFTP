@@ -78,7 +78,9 @@ class ChFTP(Gtk.Window):
         GObject.timeout_add(5000, self.peer_list_update)
 
     def on_get_clicked(self, button):
-        pass
+        model, it = self.peer_view.get_selection().get_selected()
+        if it:
+            recv_file(model[it][1], model[it][2], "_" + model[it][2])
 
     def on_add_clicked(self, button):
         dialog = Gtk.FileChooserDialog("Please choose a folder", self, Gtk.FileChooserAction.SELECT_FOLDER,
