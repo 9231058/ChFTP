@@ -80,7 +80,11 @@ class ChFTP(Gtk.Window):
     def on_get_clicked(self, button):
         model, it = self.peer_view.get_selection().get_selected()
         if it:
+            dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK,
+                                       "%s Received" % model[it][2])
             recv_file(model[it][1], model[it][2], "_" + model[it][2])
+            dialog.run()
+            dialog.destroy()
 
     def on_add_clicked(self, button):
         dialog = Gtk.FileChooserDialog("Please choose a folder", self, Gtk.FileChooserAction.SELECT_FOLDER,
