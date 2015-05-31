@@ -44,19 +44,19 @@ class ChFTP(Gtk.Window):
 
         self.add_button = Gtk.Button(label="Add")
         self.add_button.connect('clicked', self.on_add_clicked)
-        hbox.pack_start(self.add_button, True, True, 0)
+        hbox.pack_start(self.add_button, False, False, 0)
 
         self.run_button = Gtk.Button(label="Run")
         self.run_button.connect('clicked', self.on_run_clicked)
-        hbox.pack_start(self.run_button, True, True, 0)
+        hbox.pack_start(self.run_button, False, False, 0)
 
         self.get_button = Gtk.Button(label="Get", sensitive=False)
         self.get_button.connect('clicked', self.on_get_clicked)
-        hbox.pack_start(self.get_button, True, True, 0)
+        hbox.pack_start(self.get_button, False, False, 0)
 
         self.username_entry = Gtk.Entry()
         self.username_entry.set_text(getpass.getuser())
-        hbox.pack_start(self.username_entry, True, True, 0)
+        hbox.pack_start(self.username_entry, False, False, 0)
 
     def on_run_clicked(self, button):
         username = self.username_entry.get_text()
