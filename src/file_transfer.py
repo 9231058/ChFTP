@@ -20,7 +20,8 @@ class FileTransferServer(threading.Thread):
         self.sck = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sck.bind(("", 21))
         self.sck.listen(5)
-        super(FileTransferServer, self).__init__(name="File Transfer Server", daemon=True)
+        super(FileTransferServer, self).__init__(name="File Transfer Server")
+        self.setDaemon(True)
 
     def run(self):
         # Create logger object
@@ -36,7 +37,8 @@ class FileTransferServer(threading.Thread):
 class FileTransferHandler(threading.Thread):
     def __init__(self, sck: socket.socket):
         self.sck = sck
-        super(FileTransferHandler, self).__init__(name="File Transfer Handler", daemon=True)
+        super(FileTransferHandler, self).__init__(name="File Transfer Handler")
+        self.setDaemon(True)
 
     def run(self):
         # Create logger object
