@@ -61,7 +61,7 @@ class ChFTP(Gtk.Window):
     def on_run_clicked(self, button):
         username = self.username_entry.get_text()
         self.username_entry.set_sensitive(False)
-        self.peer_view.get_column(2).set_title("Remote Filename")
+        self.peer_view.get_column(2).set_title("Remote File Name")
         self.run_button.set_sensitive(False)
         self.add_button.set_sensitive(False)
         self.get_button.set_sensitive(True)
@@ -75,7 +75,7 @@ class ChFTP(Gtk.Window):
         self.fileTransferServer = FileTransferServer()
         self.fileTransferServer.start()
 
-        GObject.timeout_add(5000, self.peer_list_update)
+        GObject.timeout_add(1000, self.peer_list_update)
 
     def on_get_clicked(self, button):
         model, it = self.peer_view.get_selection().get_selected()
