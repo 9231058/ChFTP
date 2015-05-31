@@ -16,7 +16,7 @@ import time
 from peer import Peer
 from peer import PeerList
 
-broadcast_address = "255.255.255.255"
+broadcast_address = "192.168.56.255"
 
 class PresenceService(threading.Thread):
     def __init__(self, files: list, username: str):
