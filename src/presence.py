@@ -33,7 +33,7 @@ class PresenceService(threading.Thread):
 
         # Broadcasting hi message
         hi_message = "hi" + '\\' + self.username + '\\' + str(self.files)
-        self.sck.sendto(bytes(hi_message, "ascii"), (broadcast_address, 8182))
+        self.sck.sendto(hi_message.encode("ascii"), (broadcast_address, 8182))
 
         # Handle ingoing presence messages
         while True:
@@ -53,7 +53,7 @@ class PresenceService(threading.Thread):
                 PeerList().add(peer)
                 if username != self.username:
                     hiback_message = "hiback" + '\\' + self.username + '\\' + str(self.files)
-                    self.sck.sendto(bytes(hiback_message, "ascii"), address)
+                    self.sck.sendto(hiback_message.encode("ascii"), address)
             if verb == 'hiback':
                 # hi back messages handling
                 peer = Peer(username, address[0], foreign_files)
@@ -67,7 +67,7 @@ class PresenceService(threading.Thread):
     def shutdown(self):
         # Broadcasting bye message
         bye_message = "bye" + '\\' + self.username + '\\' + str(self.files)
-        self.sck.sendto(bytes(bye_message, "ascii"), (broadcast_address, 8182))
+        self.sck.sendto(bye_message.encode("ascii"), (broadcast_address, 8182))
 
 # Just for test :-)
 if __name__ == '__main__':
