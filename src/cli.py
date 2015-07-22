@@ -27,6 +27,13 @@ except ImportError:
 class ChFTP(cmd.Cmd):
     def __init__(self):
         super(ChFTP, self).__init__()
+
+        if termcolor:
+            self.prompt = termcolor.colored("ChFTP> ", color='red')
+        else:
+            self.prompt = "ChFTP> "
+        self.intro = "Welcome to ChFTP shell from chapna company.\n"
+
         self.folders = []
         self.username = ""
         self.presenceService = None
@@ -120,11 +127,6 @@ class ChFTP(cmd.Cmd):
 
 logging.basicConfig(filename='ChFTP.log', level=logging.INFO)
 cli = ChFTP()
-if termcolor:
-    cli.prompt = termcolor.colored("ChFTP> ", color='red')
-else:
-    cli.prompt = "ChFTP> "
-cli.intro = "Welcome to ChFTP shell from chapna company.\n"
 try:
     cli.cmdloop()
 except KeyboardInterrupt:
