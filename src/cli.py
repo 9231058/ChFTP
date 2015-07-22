@@ -44,10 +44,10 @@ class ChFTP(cmd.Cmd):
         print("Welcome %s" % self.username)
 
     def help_login(self):
+        command = "login {username}"
         if termcolor:
-            print(termcolor.colored("login {username}", color='green', attrs=['bold']))
-        else:
-            print("login {username}")
+            command = termcolor.colored(command, color='green', attrs=['bold'])
+        print(command)
         print("Save your username in application")
 
     def do_add(self, args: str):
@@ -69,10 +69,10 @@ class ChFTP(cmd.Cmd):
         print("File transfer server started....")
 
     def help_run(self):
+        command = "run"
         if termcolor:
-            print(termcolor.colored("run", color='green', attrs=['bold']))
-        else:
-            print("run")
+            command = termcolor.colored(command, color='green', attrs=['bold'])
+        print(command)
         print("Run presence and file transfer services,")
         print("please note that after this you cannot change your username or add new folders")
 
@@ -81,10 +81,10 @@ class ChFTP(cmd.Cmd):
             print(peer)
 
     def help_list(self):
+        command = "list"
         if termcolor:
-            print(termcolor.colored("list", color='green', attrs=['bold']))
-        else:
-            print("list")
+            command = termcolor.colored(command, color='green', attrs=['bold'])
+        print(command)
         print("List known peer with their ip, username and files")
 
     def do_get(self, args: str):
@@ -105,10 +105,10 @@ class ChFTP(cmd.Cmd):
         recv_file(ip, rfile, lfile)
 
     def help_get(self):
+        command = "get {username} {remote filename} {local filename}"
         if termcolor:
-            print(termcolor.colored("get {username} {remote filename} {local filename}", color='green', attrs=['bold']))
-        else:
-            print("get {username} {remote filename} {local filename}")
+            command = termcolor.colored(command, color='green', attrs=['bold'])
+        print(command)
         print("Get file with remote filename from username and,")
         print("store it in current directory with local filename")
 
@@ -118,10 +118,10 @@ class ChFTP(cmd.Cmd):
         sys.exit(0)
 
     def help_quit(self):
+        command = "quit"
         if termcolor:
-            print(termcolor.colored("quit", color='green', attrs=['bold']))
-        else:
-            print("quit")
+            command = termcolor.colored(command, color='green', attrs=['bold'])
+        print(command)
         print("Exit from ChFTP")
 
 
