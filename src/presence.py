@@ -18,6 +18,7 @@ from peer import PeerList
 
 broadcast_address = "192.168.56.255"
 
+
 class PresenceService(threading.Thread):
     def __init__(self, files: list, username: str):
         self.sck = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
@@ -68,6 +69,7 @@ class PresenceService(threading.Thread):
         # Broadcasting bye message
         bye_message = "bye" + '\\' + self.username + '\\' + str(self.files)
         self.sck.sendto(bye_message.encode("ascii"), (broadcast_address, 8182))
+
 
 # Just for test :-)
 if __name__ == '__main__':
