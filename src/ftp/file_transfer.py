@@ -6,13 +6,12 @@
 #
 # [] Created By : Parham Alvani (parham.alvani@gmail.com)
 # =======================================
-__author__ = 'Parham Alvani'
 
-import threading
-import socket
 import logging
+import socket
+import threading
 
-from storage import FileStorage
+from .storage import FileStorage
 
 
 class FileTransferServer(threading.Thread):
@@ -93,6 +92,7 @@ def recv_file(ip: str, remote_name: str, local_name: str):
             break
         file.write(data.decode('ascii'))
         file.flush()
+
 
 # Just for test :-)
 if __name__ == '__main__':

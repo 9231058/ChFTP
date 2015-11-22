@@ -6,15 +6,14 @@
 #
 # [] Created By : Parham Alvani (parham.alvani@gmail.com)
 # =======================================
-__author__ = 'Parham Alvani'
 
-import threading
-import socket
 import logging
+import socket
+import threading
 import time
 
-from peer import Peer
-from peer import PeerList
+from .peer import Peer
+from .peer import PeerList
 
 broadcast_address = "192.168.56.255"
 

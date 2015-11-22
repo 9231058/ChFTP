@@ -1,6 +1,6 @@
 # In The Name Of God
 # ========================================
-# [] File Name : gui.py
+# [] File Name : ChFTP_gui.py
 #
 # [] Creation Date : 28-05-2015
 #
@@ -8,16 +8,16 @@
 # =======================================
 __author__ = 'Parham Alvani'
 
-from gi.repository import Gtk
-from gi.repository import GObject
 import getpass
 import logging
 
-from presence import PresenceService
-from peer import PeerList
-from storage import FileStorage
 from file_transfer import FileTransferServer
 from file_transfer import recv_file
+from gi.repository import GObject
+from gi.repository import Gtk
+from peer import PeerList
+from presence import PresenceService
+from storage import FileStorage
 
 
 class ChFTP(Gtk.Window):

@@ -1,22 +1,21 @@
 # In The Name Of God
 # ========================================
-# [] File Name : main.py
+# [] File Name : ChFTP_cli.py
 #
 # [] Creation Date : 26-05-2015
 #
 # [] Created By : Parham Alvani (parham.alvani@gmail.com)
 # =======================================
-__author__ = 'Parham Alvani'
 
 import cmd
-import sys
 import logging
+import sys
 
-from presence import PresenceService
-from peer import PeerList
-from storage import FileStorage
-from file_transfer import FileTransferServer
-from file_transfer import recv_file
+from ftp.file_transfer import FileTransferServer
+from ftp.file_transfer import recv_file
+from ftp.storage import FileStorage
+from presence.peer import PeerList
+from presence.presence import PresenceService
 
 try:
     import termcolor
